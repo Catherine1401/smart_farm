@@ -19,5 +19,10 @@ def query_latest_data(limit: int = 5) -> pd.DataFrame:
         print(f"[ERROR] Query thất bại: {e}")
         return pd.DataFrame()  # Trả về DataFrame rỗng nếu lỗi
 
+# if __name__ == "__main__":
+#     print(query_latest_data())
+
 if __name__ == "__main__":
-    print(query_latest_data())
+    df = query_latest_data()
+    print(df.head())
+    print(f"Tổng số bản ghi: {len(df)}")

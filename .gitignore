@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.env.*  
+
+# Logs
+*.log
+
+# CnosDB data directories (nếu chạy local)
+cnosdb-data/
+cnosdb-meta/
+
+# Unit test cache
+*.pytest_cache/
+.cache/
+
+# VSCode settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+
+# Misc
+*.bak
+*.swp

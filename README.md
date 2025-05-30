@@ -1,58 +1,70 @@
-## Cấu trúc thư mục của dự án
+# 🌾 Smart Farming Simulation using CnosDB
+
+Dự án mô phỏng hệ thống nông nghiệp thông minh sử dụng dữ liệu cảm biến giả lập, lưu trữ bằng **CnosDB**, giao diện trực quan và xử lý logic trạng thái tự động.
+
 ---
-smart_farm_project/
-├── README.md
-├── requirements.txt
-├── .env                       # Thông tin kết nối CNOSDB
-├── .gitignore
 
-├── config/
-│   └── cnosdb_config.py       # Thông tin cấu hình CNOSDB
+## 🧠 Mục tiêu dự án
 
-├── data/
-│   └── sample_data.json       # Dữ liệu mô phỏng mẫu (nếu cần dump thủ công)
+- Mô phỏng cảm biến thu thập dữ liệu thời tiết: nhiệt độ, độ ẩm, ánh sáng...
+- Ghi và truy vấn dữ liệu từ **CnosDB** (một time-series database hiệu năng cao).
+- Giao diện trực quan hiển thị dữ liệu theo thời gian thực.
+- Xử lý logic trạng thái giả lập hành vi tự động: tưới nước, đóng/mở đèn...
+- Thiết lập hệ thống phân tán và có khả năng cân bằng tải.
 
-├── sensors/                   # Sinh dữ liệu cảm biến giả
-│   ├── __init__.py
-│   ├── generator.py           # Hàm tạo dữ liệu giả (nhiệt độ, độ ẩm...)
-│   └── scheduler.py           # Lập lịch gửi dữ liệu liên tục
+---
 
-├── db/
-│   ├── __init__.py
-│   ├── writer.py              # Ghi dữ liệu vào CnosDB
-│   └── query.py               # Truy vấn dữ liệu từ CnosDB
+## ⚙️ Công nghệ sử dụng
 
-├── logic/
-│   ├── __init__.py
-│   └── decision_engine.py     # Logic ra quyết định thông minh (tưới cây, bật đèn...)
+| Thành phần | Mô tả |
+|------------|------|
+| `Python` | Ngôn ngữ lập trình chính |
+| `CnosDB` | Time-series Database để lưu dữ liệu cảm biến |
+| `Streamlit` | Tạo giao diện trực quan đơn giản |
+| `schedule` | Lập lịch sinh dữ liệu tự động |
+| `pandas`, `numpy` | Xử lý và thống kê dữ liệu |
+| `loguru` | Ghi log dễ đọc |
+| `pytest` | Kiểm thử logic |
 
-├── ui/
-│   ├── __init__.py
-│   └── dashboard.py           # Giao diện đơn giản (có thể dùng Streamlit / Tkinter)
+---
 
-├── utils/
-│   └── helpers.py             # Hàm tiện ích chung: logging, thời gian, format...
+## 🗂️ Cấu trúc thư mục
 
-├── distributed/
-│   └── cnosdb_cluster.md      # Tài liệu thiết lập cluster, phân tán, load balance
+![architecture](images/image.png)
 
-├── tests/
-│   ├── test_generator.py
-│   ├── test_writer.py
-│   └── test_logic.py
 
-└── main.py                    # Entry point: chạy mô phỏng toàn bộ hệ thống
+---
 
-#### Giải thích ngắn gọn
+## 🔧 Cài đặt
 
-| Thư mục / File | Vai trò                                                         |
-| -------------- | --------------------------------------------------------------- |
-| `sensors/`     | Tạo dữ liệu giả như cảm biến đo nhiệt độ, độ ẩm...              |
-| `db/`          | Giao tiếp với CnosDB: ghi + truy vấn dữ liệu                    |
-| `logic/`       | Xử lý logic thông minh: đưa ra hành động khi dữ liệu đạt ngưỡng |
-| `ui/`          | Dashboard hoặc giao diện đơn giản hiển thị kết quả              |
-| `utils/`       | Các hàm phụ như log, thời gian, định dạng...                    |
-| `config/`      | File cấu hình, ví dụ: host, port của CnosDB                     |
-| `distributed/` | Hướng dẫn & cấu hình hệ thống phân tán                          |
-| `tests/`       | Unit test cho từng module                                       |
-| `main.py`      | Tập hợp tất cả các phần lại để chạy toàn hệ thống               |
+```bash
+git clone https://github.com/Catherine1401/smart_farm.git
+cd smart_farm_project
+python -m venv venv
+source venv/bin/activate      # hoặc .\venv\Scripts\activate trên Windows
+pip install -r requirements.txt
+```
+
+## Chạy mô phỏng
+
+```bash
+python main.py
+```
+
+## Mô phỏng dashboard
+
+```bash
+streamlit run ui/dashboard.py
+```
+
+## Hệ thống phân tán
+
+- Hỗ trợ triển khai cluster CnosDB.
+- Tính năng replication và Raft consensus để đảm bảo độ tin cậy.
+- Có thể thiết lập Load Balancer để phân tải giữa nhiều node.
+
+Xem chi tiết tại: `distributed/cnosdb_cluster.md`
+
+## Giấy phép
+
+MIT License

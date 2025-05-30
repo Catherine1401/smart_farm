@@ -1,0 +1,22 @@
+# Giao tiếp với CnosDB
+requests
+python-dotenv
+cnos-connector
+
+# Giao diện đơn giản (tùy chọn dùng Streamlit)
+streamlit
+streamlit-autorefresh
+plotly
+
+# Xử lý dữ liệu
+pandas
+numpy
+
+# Lập lịch sinh dữ liệu giả
+schedule
+
+# Gỡ lỗi & logging
+loguru
+
+# Kiểm thử (tùy chọn)
+pytest

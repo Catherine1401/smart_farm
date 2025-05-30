@@ -67,20 +67,58 @@ if df_filtered.empty:
 # 🧊 Dữ liệu mới nhất mỗi vùng
 latest_data = df_filtered.sort_values("time", ascending=False).drop_duplicates("station")
 
-# 🚨 Cảnh báo
-warning_cols = []
-for _, row in latest_data.iterrows():
-    if row['temperature'] > 35:
-        warning_cols.append(f"🔥 Nhiệt độ cao bất thường ở {row['station']}")
-    if row['humidity'] < 30:
-        warning_cols.append(f"💨 Độ ẩm thấp ở {row['station']}")
-    if row['soil_moisture'] < 15:
-        warning_cols.append(f"🌱 Độ ẩm đất thấp ở {row['station']}")
+# 🚨 Cảnh báo nâng cao
+warning_msgs = []
 
-if warning_cols:
+# Hàm lấy 3 lần đo gần nhất theo station và cột
+def get_recent_values(df, station, col, n=3):
+    temp = df[df['station'] == station].sort_values('time', ascending=False)
+    return temp[col].head(n).values
+
+now = pd.Timestamp.utcnow()
+
+for station in selected_stations:
+    temp_vals = get_recent_values(df_filtered, station, 'temperature')
+    hum_vals = get_recent_values(df_filtered, station, 'humidity')
+    soil_vals = get_recent_values(df_filtered, station, 'soil_moisture')
+
+    # 1. Nhiệt độ cao kéo dài (>35 độ 3 lần liên tiếp)
+    if len(temp_vals) == 3 and all(v > 25 for v in temp_vals):
+        warning_msgs.append(f"🔥 Nhiệt độ cao kéo dài ở {station}")
+
+    # 2. Nhiệt độ biến động mạnh > 5 độ (so với lần đo trước)
+    if len(temp_vals) >= 2 and abs(temp_vals[0] - temp_vals[1]) > 5:
+        warning_msgs.append(f"⚡ Nhiệt độ biến động mạnh ở {station}")
+
+    # 3. Độ ẩm không khí thấp kéo dài (<30% 3 lần liên tiếp)
+    if len(hum_vals) == 3 and all(v < 80 for v in hum_vals):
+        warning_msgs.append(f"💨 Độ ẩm không khí thấp kéo dài ở {station}")
+
+    # 4. Độ ẩm đất thấp kéo dài (<15% 3 lần liên tiếp)
+    if len(soil_vals) == 3 and all(v < 45 for v in soil_vals):
+        warning_msgs.append(f"🌱 Độ ẩm đất thấp kéo dài ở {station}")
+
+    # 5. Sensor offline (không có dữ liệu trong 10 giây)
+    latest_time = df_filtered[df_filtered['station'] == station]['time'].max()
+    if latest_time is None or (now - latest_time).total_seconds() > 10:
+        warning_msgs.append(f"⚠️ Sensor {station} không gửi dữ liệu (offline)")
+
+    # 6. Trung bình 5 phút nhiệt độ cao (>33 độ)
+    time_5min_ago = now - pd.Timedelta(minutes=5)
+    temp_5min = df_filtered[(df_filtered['station'] == station) & (df_filtered['time'] >= time_5min_ago)]['temperature']
+    if not temp_5min.empty and temp_5min.mean() > 33:
+        warning_msgs.append(f"🔥 Nhiệt độ trung bình 5 phút cao ở {station}")
+
+    # 7. Cảnh báo phối hợp nhiệt độ cao (>35) + độ ẩm thấp (<30) lần đo mới nhất
+    if len(temp_vals) > 0 and len(hum_vals) > 0:
+        if temp_vals[0] > 35 and hum_vals[0] < 30:
+            warning_msgs.append(f"⚠️ Nhiệt độ cao và độ ẩm thấp đồng thời ở {station}")
+
+if warning_msgs:
     st.error("🚨 Cảnh báo môi trường:")
-    for w in warning_cols:
-        st.markdown(f"- {w}")
+    for msg in warning_msgs:
+        st.markdown(f"- {msg}")
+
 
 # 📈 BIỂU ĐỒ
 tabs = st.tabs(["🌡️ Nhiệt độ", "💧 Độ ẩm", "🌱 Độ ẩm đất"])

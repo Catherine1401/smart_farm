@@ -1,4 +1,5 @@
 from cnosdb_connector import connect
+from typing import List, Tuple
 
 # Khởi tạo kết nối (chỉnh URL, user, password cho đúng)
 conn = connect(url="http://127.0.0.1:8902/", user="root", password="")
@@ -17,3 +18,16 @@ def write_to_cnosdb(measurement: str, tags: str, fields: str):
     """
     line = f"{measurement},{tags} {fields}"
     conn.write_lines([line])
+
+def batch_write_to_cnosdb(data_points: List[Tuple[str, str, str]], batch_size: int = 100):
+    """
+    Write multiple data points to CnosDB in batches for better performance.
+    
+    Parameters:
+    - data_points: List of tuples (measurement, tags, fields)
+    - batch_size: Number of points to write in each batch
+    """
+    for i in range(0, len(data_points), batch_size):
+        batch = data_points[i:i + batch_size]
+        lines = [f"{m},{t} {f}" for m, t, f in batch]
+        conn.write_lines(lines)

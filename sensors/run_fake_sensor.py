@@ -3,6 +3,10 @@ import random
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from db.writer import write_to_cnosdb
 
 def generate_data(station):

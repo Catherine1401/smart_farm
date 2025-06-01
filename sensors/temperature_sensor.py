@@ -11,7 +11,7 @@ class TemperatureSensor(BaseSensor):
 
     def generate_data(self):
         # Biến thiên nhỏ ±0.5°C mỗi lần
-        delta = random.uniform(-0.05, 0.05)
+        delta = random.uniform(-0.5, 0.5)
         self.current_temp += delta
 
         # Giới hạn trong khoảng an toàn (20 - 35°C)

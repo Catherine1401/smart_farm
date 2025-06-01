@@ -1,5 +1,3 @@
-# db/query.py
-
 from cnosdb_connector import connect
 from config.cnosdb_config import CNOSDB_CONFIG
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -38,7 +36,7 @@ def query_station_data(station: str, limit: int = 1000) -> pd.DataFrame:
         """
         result = conn.execute(query)
         df = pd.DataFrame(result)
-        df['station'] = station  # Đảm bảo có cột station
+        df['station'] = station
         return df
     except Exception as e:
         print(f"[ERROR] Truy vấn thất bại cho '{station}': {e}")

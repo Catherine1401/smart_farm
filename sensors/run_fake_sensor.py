@@ -29,7 +29,7 @@ def write_data(station):
 
 def main():
     stations = [f"Field-{i+1}" for i in range(1000)]
-    max_workers = 32
+    max_workers = 128
 
     while True:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:

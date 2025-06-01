@@ -1,18 +1,3 @@
-# sensor/soil_sensor.py
-
-from sensors.base_sensor import BaseSensor
-from datetime import datetime
-
-class SoilSensor(BaseSensor):
-    def generate_data(self):
-        return {
-            "time": datetime.utcnow().isoformat(),
-            "station": self.get_station(),
-            "soil_moisture": self._random_value(10, 60)  # phần trăm
-        }
-
-# sensor/temperature_sensor.py
-
 from sensors.base_sensor import BaseSensor
 from datetime import datetime
 import random
@@ -20,7 +5,7 @@ import random
 class SoilSensor(BaseSensor):
     def __init__(self, station):
         super().__init__(station)
-        self.current_temp = random.uniform(25, 30)  # giá trị ban đầu hợp lý
+        self.current_temp = random.uniform(25, 30)
 
     def generate_data(self):
         # Biến thiên nhỏ ±0.5°C mỗi lần

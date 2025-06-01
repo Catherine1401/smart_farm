@@ -10,6 +10,6 @@ def write_to_cnosdb(measurement, tags, fields):
     try:
         with urllib.request.urlopen(req) as response:
             if response.status != 200:
-                print("❌ Write failed:", response.status, response.read())
+                print("Write failed:", response.status, response.read())
     except Exception as e:
-        print("❌ Error writing to CnosDB:", e)
+        print("Error writing to CnosDB:", e)

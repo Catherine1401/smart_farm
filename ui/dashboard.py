@@ -10,7 +10,7 @@ import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 
 # 🔁 Auto-refresh mỗi 1s
-st_autorefresh(interval=1000, key="refresh")
+st_autorefresh(interval=5000, key="refresh")
 
 # 🎯 HEADER
 st.title("🌿 Smart Farm Realtime Dashboard")
@@ -83,7 +83,7 @@ for station in selected_stations:
     soil_vals = get_recent_values(df_filtered, station, 'soil_moisture')
 
     # 1. Nhiệt độ cao kéo dài (>35 độ 3 lần liên tiếp)
-    if len(temp_vals) == 3 and all(v > 25 for v in temp_vals):
+    if len(temp_vals) == 3 and all(v > 15 for v in temp_vals):
         warning_msgs.append(f"🔥 Nhiệt độ cao kéo dài ở {station}")
 
     # 2. Nhiệt độ biến động mạnh > 5 độ (so với lần đo trước)
